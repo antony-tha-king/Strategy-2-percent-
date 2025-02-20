@@ -3,332 +3,625 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Precision 2% Daily Tracker with Time Zones</title>
+    <title>Precision 2% Daily Tracker</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Arial', sans-serif;
-        }
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+}
 
-        body {
-            background: #f0f2f5;
-            color: #333;
-            line-height: 1.6;
-        }
+body {
+    background: #f0f2f5;
+    color: #333;
+    line-height: 1.6;
+    transition: background 0.5s, color 0.5s;
+}
 
-        .login-container {
-            max-width: 400px;
-            margin: 5% auto;
-            padding: 2rem;
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            text-align: center;
-        }
+.dark-mode {
+    background: #121212;
+    color: #e0e0e0;
+}
 
-        .login-container h2 {
-            color: #1a73e8;
-            margin-bottom: 1.5rem;
-        }
+.login-container {
+    max-width: 400px;
+    margin: 5% auto;
+    padding: 2rem;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    text-align: center;
+    transition: background 0.5s;
+}
 
-        .login-container input {
-            width: 100%;
-            padding: 12px;
-            margin: 8px 0;
-            border: 2px solid #ddd;
-            border-radius: 6px;
-            font-size: 16px;
-            transition: border-color 0.3s ease;
-        }
+.dark-mode .login-container {
+    background: #1f1f1f;
+}
 
-        .login-container input:focus {
-            border-color: #1a73e8;
-            outline: none;
-        }
+.login-container h2 {
+    color: #1a73e8;
+    margin-bottom: 1.5rem;
+}
 
-        #dashboard {
-            display: none;
-        }
+.login-container input {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+    background: #fff; /* Light mode background */
+    color: #333; /* Light mode text color */
+}
 
-        .dashboard {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 2rem;
-        }
+.dark-mode .login-container input {
+    background: #2c2c2c; /* Dark mode background */
+    color: #e0e0e0; /* Dark mode text color */
+    border: 2px solid #444; /* Dark mode border color */
+}
 
-        .dashboard h2 {
-            color: #1a73e8;
-            text-align: center;
-            margin-bottom: 2rem;
-            font-size: 2.2rem;
-        }
+.login-container input:focus {
+    border-color: #1a73e8;
+    outline: none;
+}
 
-        .metrics {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
+#dashboard {
+    display: none;
+}
 
-        .metric-box {
-            background: #fff;
-            padding: 1.5rem;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            text-align: center;
-            transition: transform 0.3s ease;
-        }
+.dashboard {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: #fff; /* Light mode background */
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: background 0.5s;
+}
 
-        .metric-box:hover {
-            transform: translateY(-3px);
-        }
+.dark-mode .dashboard {
+    background: #1f1f1f; /* Dark mode background */
+}
 
-        .metric-box h3 {
-            color: #666;
-            font-size: 1rem;
-            margin-bottom: 0.5rem;
-        }
+.dashboard h2 {
+    color: #1a73e8;
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 2.2rem;
+}
 
-        .metric-box p {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #1a73e8;
-        }
+.metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
 
-        .progress-container {
-            background: #fff;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            margin: 2rem 0;
-        }
+.metric-box {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    text-align: center;
+    transition: transform 0.3s ease;
+}
 
-        .progress-bar {
-            background: #e0e0e0;
-            height: 25px;
-            border-radius: 12px;
-            overflow: hidden;
-            margin: 1rem 0;
-        }
+.dark-mode .metric-box {
+    background: #2c2c2c; /* Dark mode background */
+    color: #e0e0e0; /* Dark mode text color */
+}
 
-        .progress-fill {
-            background: #1a73e8;
-            height: 100%;
-            width: 0%;
-            transition: width 0.5s ease;
-        }
+.metric-box:hover {
+    transform: translateY(-3px);
+}
 
-        button {
-            background: #1a73e8;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            margin: 0.5rem 0;
-        }
+.metric-box h3 {
+    color: #666;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
 
-        button:hover {
-            background: #1557b0;
-            transform: translateY(-1px);
-        }
+.metric-box p {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #1a73e8;
+}
 
-        input[type="number"] {
-            width: 100%;
-            padding: 12px;
-            margin: 8px 0;
-            border: 2px solid #ddd;
-            border-radius: 6px;
-            font-size: 16px;
-        }
+.copy-button {
+    background: #1a73e8;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 10px;
+    transition: background 0.3s;
+}
 
-        .split-trades {
-            background: #fff;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            margin: 2rem 0;
-        }
+.copy-button:hover {
+    background: #1557b0;
+}
 
-        .trade-group {
-            margin-bottom: 2rem;
-            background: #f8f9fa;
-            padding: 1.5rem;
-            border-radius: 8px;
-        }
+.progress-container {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    margin: 2rem 0;
+}
 
-        .trade-summary {
-            background: #e8f5e9;
-            padding: 1rem;
-            margin-bottom: 1.5rem;
-            border-radius: 8px;
-            border-left: 4px solid #34a853;
-        }
+.dark-mode .progress-container {
+    background: #2c2c2c; /* Dark mode background */
+}
 
-        .trade-detail {
-            background: #fff;
-            padding: 1rem;
-            margin: 1rem 0;
-            border-radius: 8px;
-            border-left: 4px solid #ffc107;
-        }
+.progress-bar {
+    background: #e0e0e0;
+    height: 25px;
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 1rem 0;
+}
 
-        .trade-stats {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 0.5rem;
-        }
+.progress-fill {
+    background: #1a73e8;
+    height: 100%;
+    width: 0%;
+    transition: width 0.5s ease;
+}
 
-        .trade-stats span {
-            font-size: 0.9rem;
-            color: #666;
-        }
+button {
+    background: linear-gradient(145deg, #e0e0e0, #ffffff);
+    color: #333;
+    border: 1px solid #ccc;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    margin: 0.5rem 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 
-        .logout-btn {
-            background: #f44336;
-            float: right;
-        }
+button:hover {
+    background: linear-gradient(145deg, #ffffff, #e0e0e0);
+    transform: translateY(-1px);
+}
 
-        .logout-btn:hover {
-            background: #d32f2f;
-        }
+button:focus {
+    outline: none;
+    border-color: #1a73e8; /* Highlight border on focus */
+}
 
-        .trade-calculator {
-            background: white;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            margin: 2rem 0;
-        }
+.dark-mode button {
+    background: #34a853; /* Dark mode button background */
+}
 
-        .trade-calculator h3 {
-            color: #1a73e8;
-            margin-bottom: 1.5rem;
-            border-bottom: 2px solid #1a73e8;
-            padding-bottom: 0.5rem;
-        }
+.dark-mode .copy-button {
+    background: #34a853; /* Dark mode copy button background */
+}
 
-        .calculator-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
+.dark-mode .copy-button:hover {
+    background: #2c7a2e; /* Dark mode copy button hover */
+}
 
-        .direction-select {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 6px;
-            font-size: 16px;
-            background: white;
-            transition: all 0.3s ease;
-        }
+input[type="number"] {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    background: #fff; /* Light mode background */
+    color: #333; /* Light mode text color */
+}
 
-        .direction-select:focus {
-            border-color: #1a73e8;
-            outline: none;
-            box-shadow: 0 0 5px rgba(26, 115, 232, 0.3);
-        }
+.dark-mode input[type="number"] {
+    background: #2c2c2c; /* Dark mode background */
+    color: #e0e0e0; /* Dark mode text color */
+    border: 2px solid #444; /* Dark mode border color */
+}
 
-        .calculate-btn {
-            background: #34a853;
-            width: 100%;
-            padding: 14px;
-            font-weight: bold;
-            letter-spacing: 0.5px;
-        }
+.split-trades {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    margin: 2rem 0;
+}
 
-        .calculate-btn:hover {
-            background: #2d9146;
-            transform: translateY(-2px);
-        }
+.dark-mode .split-trades {
+    background: #2c2c2c; /* Dark mode background */
+}
 
-        .trade-results-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
+.trade-group {
+    margin-bottom: 2rem;
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+}
 
-        .result-item {
-            background: #f8f9fa;
-            padding: 1rem;
-            border-radius: 8px;
-            text-align: center;
-        }
+.dark-mode .trade-group {
+    background: #2c2c2c; /* Dark mode background */
+}
 
-        .result-item h4 {
-            color: #666;
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
-        }
+.trade-summary {
+    background: #e8f5e9;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+    border-left: 4px solid #34a853;
+}
 
-        .result-value {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #1a73e8;
-        }
+.dark-mode .trade-summary {
+    background: #2c2c2c; /* Dark mode background */
+    border-left: 4px solid #34a853; /* Keep the border color */
+}
 
-        .rise-option { color: #34a853; }
-        .fall-option { color: #ea4335; }
+.trade-detail {
+    background: #fff;
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: 8px;
+    border-left: 4px solid #ffc107;
+}
 
-        @media (max-width: 768px) {
-            .dashboard {
-                padding: 1rem;
-            }
-            
-            .metrics {
-                grid-template-columns: 1fr 1fr;
-            }
-            
-            .login-container {
-                margin: 20% 1rem;
-                width: auto;
-            }
-        }
+.dark-mode .trade-detail {
+    background: #2c2c2c; /* Dark mode background */
+    border-left: 4px solid #ffc107; /* Keep the border color */
+}
 
-        .timezone-container {
-            margin: 1rem 0;
-            padding: 1rem;
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
+.trade-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.5rem;
+}
 
-        .timezone-container input {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 6px;
-            font-size: 16px;
-            margin-bottom: 1rem;
-        }
+.trade-stats span {
+    font-size: 0.9rem;
+    color: #666;
+}
 
-        .timezone-container select {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 6px;
-            font-size: 16px;
-            margin-bottom: 1rem;
-        }
+.logout-btn {
+    background: #f44336;
+    float: right;
+}
 
-        .timezone-container p {
-            font-size: 1.2rem;
-            color: #1a73e8;
-            text-align: center;
-        }
+.logout-btn:hover {
+    background: #d32f2f;
+}
+
+.trade-calculator {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    margin: 2rem 0;
+}
+
+.dark-mode .trade-calculator {
+    background: #2c2c2c; /* Dark mode background */
+}
+
+.trade-calculator h3 {
+    color: #1a73e8;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #1a73e8;
+    padding-bottom: 0.5rem;
+}
+
+.calculator-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.direction-select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    background: white; /* Light mode background */
+    transition: all 0.3s ease;
+}
+
+.dark-mode .direction-select {
+    background: #2c2c2c; /* Dark mode background */
+    color: #e0e0e0; /* Dark mode text color */
+    border: 2px solid #444; /* Dark mode border color */
+}
+
+.direction-select:focus {
+    border-color: #1a73e8;
+    outline: none;
+    box-shadow: 0 0 5px rgba(26, 115, 232, 0.3);
+}
+
+.calculate-btn {
+    background: linear-gradient(145deg, #e0e0e0, #ffffff);
+    color: #333;
+    border: 1px solid #ccc;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    width: 100%; /* Ensure it takes full width */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.calculate-btn:hover {
+    background: linear-gradient(145deg, #ffffff, #e0e0e0);
+    transform: translateY(-1px);
+}
+
+.calculate-btn:focus {
+    outline: none;
+    border-color: #1a73e8; /* Highlight border on focus */
+}
+
+.trade-results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.result-item {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.dark-mode .result-item {
+    background: #2c2c2c; /* Dark mode background */
+}
+
+.result-item h4 {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.result-value {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #1a73e8;
+}
+
+.rise-option { color: #34a853; }
+.fall-option { color: #ea4335; }
+
+@media (max-width: 768px) {
+    .dashboard {
+        padding: 1rem;
+    }
+    
+    .metrics {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .login-container {
+        margin: 20% 1rem;
+        width: auto;
+    }
+}
+
+.timezone-container {
+    margin: 1rem 0;
+    padding: 1rem;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.dark-mode .timezone-container {
+    background: #2c2c2c; /* Dark mode background */
+}
+
+.timezone-container input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    margin-bottom: 1rem;
+    background: #fff; /* Light mode background */
+    color: #333; /* Light mode text color */
+}
+
+.dark-mode .timezone-container input {
+    background: #2c2c2c; /* Dark mode background */
+    color: #e0e0e0; /* Dark mode text color */
+    border: 2px solid #444; /* Dark mode border color */
+}
+
+.timezone-container select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    margin-bottom: 1rem;
+    background: #fff; /* Light mode background */
+    color: #333; /* Light mode text color */
+}
+
+.dark-mode .timezone-container select {
+    background: #2c2c2c; /* Dark mode background */
+    color: #e0e0e0; /* Dark mode text color */
+    border: 2px solid #444; /* Dark mode border color */
+}
+
+.timezone-container p {
+    font-size: 1.2rem;
+    color: #1a73e8;
+    text-align: center;
+}
+
+/* Dark Mode Toggle */
+.dark-mode-toggle {
+    position: fixed;
+    top: 30px;
+    right: 40px;
+    width: 80px;
+    height: 40px;
+    padding: 0;
+    border-radius: 999px;
+    background: #F3F3F3;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    border: none;
+    transition: 0.5s;
+    z-index: 1000;
+}
+
+.dark-mode .dark-mode-toggle {
+    background: #1F1F21;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.toggle-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    position: absolute;
+    top: 50%;
+    left: 4px;
+    transform: translateY(-50%);
+    transition: 0.5s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dark-mode .toggle-circle {
+    left: calc(100% - 36px);
+    background: #2C2C2F;
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.5),
+                -10px -10px 30px rgba(0, 0, 0, 0.5) inset;
+}
+
+.toggle-circle i.fa-sun {
+    color: #FFD600;
+    font-size: 16px;
+}
+
+.toggle-circle i.fa-moon {
+    color: white;
+    font-size: 16px;
+    display: none;
+}
+
+.dark-mode .toggle-circle i.fa-sun {
+    display: none;
+}
+
+.dark-mode .toggle-circle i.fa-moon {
+    display: block;
+}
+
+.dark-mode .dark-mode-toggle {
+    color: #fff;
+}
+
+.dark-mode-toggle:hover {
+    transform: scale(1.1);
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 1rem;
+    color: #010101;
+    margin-top: 2rem;
+    font-family: 'Georgia', serif;
+    font-size: 0.9rem;
+    background: transparent;
+}
+
+.dark-mode footer {
+    color: #888;
+    background: transparent;
+}
+
+/* WhatsApp Icon */
+.whatsapp-icon {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: linear-gradient(145deg, #128C7E, #075E54);
+    color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    cursor: pointer;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 12px rgba(18, 140, 126, 0.3);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 4px 12px rgba(18, 140, 126, 0.3);
+    }
+    70% {
+        transform: scale(1.05);
+        box-shadow: 0 0 20px rgba(18, 140, 126, 0.4);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 4px 12px rgba(18, 140, 126, 0.3);
+    }
+}
+
+.whatsapp-icon:hover {
+    background: #075E54;
+    transform: scale(1.05);
+    box-shadow: 0 6px 16px rgba(18, 140, 126, 0.4);
+    animation: none;
+}
+
+.dark-mode .whatsapp-icon {
+    background: linear-gradient(145deg, #075E54, #05433A);
+    box-shadow: 0 4px 12px rgba(18, 140, 126, 0.5);
+}
+
+.dark-mode .whatsapp-icon:hover {
+    background: #05433A;
+    box-shadow: 0 6px 16px rgba(18, 140, 126, 0.6);
+}
     </style>
 </head>
 <body>
+    <!-- Dark Mode Toggle -->
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()">
+        <div class="toggle-circle">
+            <i class="fas fa-sun"></i>
+            <i class="fas fa-moon"></i>
+        </div>
+    </button>
+
     <!-- Login Section -->
     <div class="login-container" id="loginSection">
-        <h2>Wealth Accelerator Portal</h2>
+        <h2>Accelerator Portal ✅</h2>
         <input type="text" id="username" placeholder="Username">
         <input type="password" id="password" placeholder="Password">
         <button onclick="login()">Access Dashboard</button>
@@ -355,10 +648,12 @@
             <div class="metric-box">
                 <h3>Stop Loss (5%)</h3>
                 <p id="stopLossAmount">$0.00</p>
+                <button class="copy-button" onclick="copyToClipboard('stopLossAmount')">Copy</button>
             </div>
             <div class="metric-box">
                 <h3>Recommended Lot Size</h3>
                 <p id="lotSize">0.000</p>
+                <button class="copy-button" onclick="copyToClipboard('lotSize')">Copy</button>
             </div>
         </div>
 
@@ -410,14 +705,17 @@
                 <div class="result-item">
                     <h4>Take Profit (TP)</h4>
                     <div class="result-value" id="tpPrice">-</div>
+                    <button class="copy-button" onclick="copyToClipboard('tpPrice')">Copy</button>
                 </div>
                 <div class="result-item">
                     <h4>Stop Loss (SL)</h4>
                     <div class="result-value" id="slPrice">-</div>
+                    <button class="copy-button" onclick="copyToClipboard('slPrice')">Copy</button>
                 </div>
                 <div class="result-item">
                     <h4>Lot Size</h4>
                     <div class="result-value" id="calculatedLots">-</div>
+                    <button class="copy-button" onclick="copyToClipboard('calculatedLots')">Copy</button>
                 </div>
             </div>
         </div>
@@ -458,6 +756,16 @@
         </div>
     </div>
 
+    <!-- Footer -->
+    <footer>
+        Made with 💖 by Antony
+    </footer>
+
+    <!-- WhatsApp Icon -->
+    <div class="whatsapp-icon" onclick="redirectToWhatsApp()">
+        <i class="fab fa-whatsapp"></i>
+    </div>
+
     <script>
         let currentBalance = parseFloat(localStorage.getItem('currentBalance')) || 50;
         let tradesToday = parseInt(localStorage.getItem('tradesToday')) || 0;
@@ -486,6 +794,15 @@
                 localStorage.setItem('tradesToday', tradesToday);
                 localStorage.setItem('lastTradeDate', lastTradeDate);
             }
+        }
+
+        function copyToClipboard(elementId) {
+            const textToCopy = document.getElementById(elementId).textContent;
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                alert('Copied to clipboard: ' + textToCopy);
+            }).catch(err => {
+                console.error('Error copying text: ', err);
+            });
         }
 
         function calculateTradeGroups() {
@@ -700,6 +1017,14 @@
 
         function startClock() {
             setInterval(updateTime, 1000);
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+        }
+
+        function redirectToWhatsApp() {
+            window.open('https://wa.me/254111918657?text=Hello%20Antony%20I%20saw%20you%20trading%20Application%20😎', '_blank'); // Replace with your WhatsApp number
         }
 
         // Initialize time zones when page loads
