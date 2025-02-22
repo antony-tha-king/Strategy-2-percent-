@@ -139,7 +139,7 @@
             cursor: pointer;
             font-size: 14px;
             margin-top: 10px;
-            transition: background 0.3s;
+            transition: background 0 .3s;
         }
 
         .copy-button:hover {
@@ -573,7 +573,7 @@
             border: 2px solid rgba(255, 255, 255, 0.2);
             box-shadow: 0 4px 12px rgba(18, 140, 126, 0.3);
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            text-shadow: 0 1px  2px rgba(0, 0, 0, 0.2);
             animation: pulse 2s infinite;
         }
 
@@ -646,7 +646,7 @@
                 <p id="dailyTarget">$0.00</p>
             </div>
             <div class="metric-box">
-                <h3>Stop Loss (1.5%)</h3>
+                <h3>Stop Loss (5%)</h3>
                 <p id="stopLossAmount">$0.00</p>
                 <button class="copy-button" onclick="copyToClipboard('stopLossAmount')">Copy</button>
             </div>
@@ -685,6 +685,7 @@
 
         <!-- Enhanced Trade Calculator Section -->
         <div class="trade-calculator">
+            <h3>Trade Calculator</h ```html
             <h3>Trade Calculator</h3>
             <div class="calculator-grid">
                 <div>
@@ -795,7 +796,7 @@
             const today = new Date().toDateString();
             if (today !== lastTradeDate) {
                 tradesToday = 0;
-                lastTradeDate = today;
+ lastTradeDate = today;
                 localStorage.setItem('tradesToday', tradesToday);
                 localStorage.setItem('lastTradeDate', lastTradeDate);
             }
@@ -852,7 +853,7 @@
                 Math.log(target / currentBalance) / Math.log(1.02)
             );
             document.getElementById('dailyTarget').textContent = `$${(currentBalance * 0.02).toFixed(2)}`;
-            document.getElementById('stopLossAmount').textContent = `$${(currentBalance * 0.015).toFixed(2)}`;
+            document.getElementById('stopLossAmount').textContent = `$${(currentBalance * 0.05).toFixed(2)}`;
             document.getElementById('lotSize').textContent = (currentBalance * 0.01 / 500).toFixed(3);
             
             // Update progress bar
@@ -909,7 +910,7 @@
                 
                 localStorage.setItem('currentBalance', currentBalance);
                 localStorage.setItem('tradesToday', tradesToday);
-                localStorage.setItem(' lastTradeDate', lastTradeDate);
+                localStorage.setItem('lastTradeDate', lastTradeDate);
                 
                 updateDisplay();
             }
@@ -924,8 +925,8 @@
             const tp500 = direction === 'rise' ? entryPrice + 500 : entryPrice - 500;
             const tp3000 = direction === 'rise' ? entryPrice + 3000 : entryPrice - 3000;
             const sl = direction === 'rise' 
-                ? entryPrice - (currentBalance * 0.015 / lots)
-                : entryPrice + (currentBalance * 0.015 / lots);
+                ? entryPrice - (currentBalance * 0.05 / lots)
+                : entryPrice + (currentBalance * 0.05 / lots);
             
             document.getElementById('tpPrice').textContent = tp500.toFixed(2);
             document.getElementById('tpPrice3000').textContent = tp3000.toFixed(2);
@@ -1031,7 +1032,7 @@
         }
 
         function redirectToWhatsApp() {
-            window.open('https://wa.me/254111918657?text=Hello%20Antony%20I%20saw%20you%20trading%20Application%20😎', '_blank'); // Replace with your WhatsApp number
+            window.open('https://wa.me/254111918657?text=Hello%20Antony%20I%20saw%20you%20trading%20Application%20😎', '_ blank'); // Replace with your WhatsApp number
         }
 
         // Initialize time zones when page loads
