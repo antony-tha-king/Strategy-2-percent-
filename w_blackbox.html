@@ -646,7 +646,7 @@
                 <p id="dailyTarget">$0.00</p>
             </div>
             <div class="metric-box">
-                <h3>Stop Loss (2%)</h3>
+                <h3>Stop Loss (5%)</h3>
                 <p id="stopLossAmount">$0.00</p>
                 <button class="copy-button" onclick="copyToClipboard('stopLossAmount')">Copy</button>
             </div>
@@ -795,7 +795,7 @@
             const today = new Date().toDateString();
             if (today !== lastTradeDate) {
                 tradesToday = 0;
-                lastTradeDate = today;
+ lastTradeDate = today;
                 localStorage.setItem('tradesToday', tradesToday);
                 localStorage.setItem('lastTradeDate', lastTradeDate);
             }
@@ -852,7 +852,7 @@
                 Math.log(target / currentBalance) / Math.log(1.02)
             );
             document.getElementById('dailyTarget').textContent = `$${(currentBalance * 0.02).toFixed(2)}`;
-            document.getElementById('stopLossAmount').textContent = `$${(currentBalance * 0.02).toFixed(2)}`;
+            document.getElementById('stopLossAmount').textContent = `$${(currentBalance * 0.05).toFixed(2)}`;
             document.getElementById('lotSize').textContent = (currentBalance * 0.01 / 500).toFixed(3);
             
             // Update progress bar
@@ -908,7 +908,7 @@
                 currentBalance = newBalance;
                 
                 localStorage.setItem('currentBalance', currentBalance);
- localStorage.setItem('tradesToday', tradesToday);
+                localStorage.setItem('tradesToday', tradesToday);
                 localStorage.setItem('lastTradeDate', lastTradeDate);
                 
                 updateDisplay();
@@ -924,8 +924,8 @@
             const tp500 = direction === 'rise' ? entryPrice + 500 : entryPrice - 500;
             const tp3000 = direction === 'rise' ? entryPrice + 3000 : entryPrice - 3000;
             const sl = direction === 'rise' 
-                ? entryPrice - (currentBalance * 0.02 / lots) // Updated to 2%
-                : entryPrice + (currentBalance * 0.02 / lots); // Updated to 2%
+                ? entryPrice - (currentBalance * 0.05 / lots)
+                : entryPrice + (currentBalance * 0.05 / lots);
             
             document.getElementById('tpPrice').textContent = tp500.toFixed(2);
             document.getElementById('tpPrice3000').textContent = tp3000.toFixed(2);
@@ -1029,8 +1029,9 @@
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
         }
+
         function redirectToWhatsApp() {
-            window.open('https://wa.me/254111918657?text=Hello%20Antony%20I%20saw%20you%20trading%20Application%20😎', '_ blank'); // Replace with your WhatsApp number
+            window.open('https://wa.me/254111918657?text=Hello Antony I saw you trading Application 😎', '_ blank'); // Replace with your WhatsApp number
         }
 
         // Initialize time zones when page loads
