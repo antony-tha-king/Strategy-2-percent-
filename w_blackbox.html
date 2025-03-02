@@ -951,20 +951,20 @@
         }
 
         function updateTime() {
-            const timeZone = document.getElementById('timeZoneSelector').value;
-            const options = {
-                timeZone: timeZone,
-                hour12: true,
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: 'numeric',
-                minute: 'numeric',
-                second: 'numeric'
-            };
-            const date = new Date().toLocaleString('en-US', options);
-            document.getElementById('currentDateTime').textContent = `Current Date and Time: ${date}`;
+    const timeZone = document.getElementById('timeZoneSelector').value;
+    const options = {
+        timeZone: timeZone,
+        hour12: true,
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric'
+    };
+    const date = new Date().toLocaleString('en-US', options);
+    document.getElementById('currentDateTime').innerHTML = `Current Date and Time:<br>${date}`; 
         }
 
         function filterTimeZones() {
