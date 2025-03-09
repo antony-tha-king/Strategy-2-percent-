@@ -1,732 +1,767 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Precision 2% Daily Tracker</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Arial', sans-serif;
-        }
-
-        body {
-            background: #f0f2f5;
-            color: #333;
-            line-height: 1.6;
-            transition: background 0.5s, color 0.5s;
-        }
-
-        .dark-mode {
-            background: #121212;
-            color: #e0e0e0;
-        }
-
-        .login-container {
-            max-width: 400px;
-            margin: 5% auto;
-            padding: 2rem;
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            text-align: center;
-            transition: background 0.5s;
-        }
-
-        .dark-mode .login-container {
-            background: #1f1f1f;
-        }
-
-        .login-container h2 {
-            color: #1a73e8;
-            margin-bottom: 1.5rem;
-        }
-
-        .login-container input {
-            width: 100%;
-            padding: 12px;
-            margin: 8px 0;
-            border: 2px solid #ddd;
-            border-radius: 6px;
-            font-size: 16px;
-            transition: border-color 0.3s ease;
-            background: #fff; /* Light mode background */
-            color: #333; /* Light mode text color */
-        }
-
-        .dark-mode .login-container input {
-            background: #2c2c2c; /* Dark mode background */
-            color: #e0e0e0; /* Dark mode text color */
-            border: 2px solid #444; /* Dark mode border color */
-        }
-
-        .login-container input:focus {
-            border-color: #1a73e8;
-            outline: none;
-        }
-
-        #dashboard {
-            display: none;
-        }
-
-        .dashboard {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 2rem;
-            background: #fff; /* Light mode background */
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: background 0.5s;
-        }
-
-        .dark-mode .dashboard {
-            background: #1f1f1f; /* Dark mode background */
-        }
-
-        .dashboard h2 {
-            color: #1a73e8;
-            text-align: center;
-            margin-bottom: 2rem;
-            font-size: 2.2rem;
-        }
-
-        .metrics {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .metric-box {
-            background: #fff;
-            padding: 1.5rem;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            text-align: center;
-            transition: transform 0.3s ease;
-        }
-
-        .dark-mode .metric-box {
-            background: #2c2c2c; /* Dark mode background */
-            color: #e0e0e0; /* Dark mode text color */
-        }
-
-        .metric-box:hover {
-            transform: translateY(-3px);
-        }
-
-        .metric-box h3 {
-            color: #666;
-            font-size: 1rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .metric-box p {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #1a73e8;
-        }
-
-        .copy-button {
-            background: #1a73e8;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            margin-top: 10px;
-            transition: background 0 .3s;
-        }
-
-        .copy-button:hover {
-            background: #1557b0;
-        }
-
-        .progress-container {
-            background: #fff;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            margin: 2rem 0;
-        }
-
-        .dark-mode .progress-container {
-            background: #2c2c2c; /* Dark mode background */
-        }
-
-        .progress-bar {
-            background: #e0e0e0;
-            height: 25px;
-            border-radius: 12px;
-            overflow: hidden;
-            margin: 1rem 0;
-        }
-
-        .progress-fill {
-            background: #1a73e8;
-            height: 100%;
-            width: 0%;
-            transition: width 0.5s ease;
-        }
-
-        button {
-            background: linear-gradient(145deg, #e0e0e0, #ffffff);
-            color: #333;
-            border: 1px solid #ccc;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            margin: 0.5rem 0;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        button:hover {
-            background: linear-gradient(145deg, #ffffff, #e0e0e0);
-            transform: translateY(-1px);
-        }
-
-        button:focus {
-            outline: none;
-            border-color: #1a73e8; /* Highlight border on focus */
-        }
-
-        .dark-mode button {
-            background: #34a853; /* Dark mode button background */
-        }
-
-        .dark-mode .copy-button {
-            background: #34a853; /* Dark mode copy button background */
-        }
-
-        .dark-mode .copy-button:hover {
-            background: #2c7a2e; /* Dark mode copy button hover */
-        }
-
-        input[type="number"] {
-            width: 100%;
-            padding: 12px;
-            margin: 8px 0;
-            border: 2px solid #ddd;
-            border-radius: 6px;
-            font-size: 16px;
-            background: #fff; /* Light mode background */
-            color: #333; /* Light mode text color */
-        }
-
-        .dark-mode input[type="number"] {
-            background: #2c2c2c; /* Dark mode background */
-            color: #e0e0e0; /* Dark mode text color */
-            border: 2px solid #444; /* Dark mode border color */
-        }
-
-        .split-trades {
-            background: #fff;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            margin: 2rem 0;
-        }
-
-        .dark-mode .split-trades {
-            background: #2c2c2c; /* Dark mode background */
-        }
-
-        .trade-group {
-            margin-bottom: 2rem;
-            background: #f8f9fa;
-            padding: 1.5rem;
-            border-radius: 8px;
-        }
-
-        .dark-mode .trade-group {
-            background: #2c2c2c; /* Dark mode background */
-        }
-
-        .trade-summary {
-            background: #e8f5e9;
-            padding: 1rem;
-            margin-bottom: 1.5rem;
-            border-radius: 8px;
-            border-left: 4px solid #34a853;
-        }
-
-        .dark-mode .trade-summary {
-            background: #2c2c2c; /* Dark mode background */
-            border-left: 4px solid #34a853; /* Keep the border color */
-        }
-
-        .trade-detail {
-            background: #fff;
-            padding: 1rem;
-            margin: 1rem 0;
-            border-radius: 8px;
-            border-left: 4px solid #ffc107;
-        }
-
-        .dark-mode .trade-detail {
-            background: #2c2c2c; /* Dark mode background */
-            border-left: 4px solid #ffc107; /* Keep the border color */
-        }
-
-        .trade-stats {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 0.5rem;
-        }
-
-        .trade-stats span {
-            font-size: 0.9rem;
-            color: #666;
-        }
-
-        .logout-btn {
-            background: #f44336;
-            float: right;
-        }
-
-        .logout-btn:hover {
-            background: #d32f2f;
-        }
-
-        .trade-calculator {
-            background: white;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            margin: 2rem 0;
-        }
-
-        .dark-mode .trade-calculator {
-            background: #2c2c2c; /* Dark mode background */
-        }
-
-        .trade-calculator h3 {
-            color: #1a73e8;
-            margin-bottom: 1.5rem;
-            border-bottom: 2px solid #1a73e8;
-            padding-bottom: 0.5rem;
-        }
-
-        .calculator-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .direction-select {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 6px;
-            font-size: 16px;
-            background: white; /* Light mode background */
-            transition: all 0.3s ease;
-        }
-
-        .dark-mode .direction-select {
-            background: #2c2c2c; /* Dark mode background */
-            color: #e0e0e0; /* Dark mode text color */
-            border: 2px solid #444; /* Dark mode border color */
-        }
-
-        .direction-select:focus {
-            border-color: #1a73e8;
-            outline: none;
-            box-shadow: 0 0 5px rgba(26, 115, 232, 0.3);
-        }
-
-        .calculate-btn {
-            background: linear-gradient(145deg, #e0e0e0, #ffffff);
-            color: #333;
-            border: 1px solid #ccc;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-            letter-spacing: 0.5px;
-            transition: all 0.3s ease;
-            width: 100%; /* Ensure it takes full width */
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .calculate-btn:hover {
-            background: linear-gradient(145deg, #ffffff, #e0e0e0);
-            transform: translateY(-1px);
-        }
-
-        .calculate-btn:focus {
-            outline: none;
-            border-color: #1a73e8; /* Highlight border on focus */
-        }
-
-        .trade-results-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-
-        .result-item {
-            background: #f8f9fa;
-            padding: 1rem;
-            border-radius: 8px;
-            text-align: center;
-        }
-
-        .dark-mode .result-item {
-            background: #2c2c2c; /* Dark mode background */
-        }
-
-        .result-item h4 {
-            color: #666;
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .result-value {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #1a73e8;
-        }
-
-        .rise-option { color: #34a853; }
-        .fall-option { color: #ea4335; }
-
-        @media (max-width: 768px) {
-            .dashboard {
-                padding: 1rem;
-            }
-            
-            .metrics {
-                grid-template-columns: 1fr 1fr;
-            }
-            
-            .login-container {
-                margin: 20% 1rem;
-                width: auto;
-            }
-        }
-
-        .timezone-container {
-            margin: 1rem 0;
-            padding: 1rem;
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-
-        .dark-mode .timezone-container {
-            background: #2c2c2c; /* Dark mode background */
-        }
-
-        .timezone-container input {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 6px;
-            font-size: 16px;
-            margin-bottom: 1rem;
-            background: #fff; /* Light mode background */
-            color: #333; /* Light mode text color */
-        }
-
-        .dark-mode .timezone-container input {
-            background: #2c2c2c; /* Dark mode background */
-            color: #e0e0e0; /* Dark mode text color */
-            border: 2px solid #444; /* Dark mode border color */
-        }
-
-        .timezone-container select {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 6px;
-            font-size: 16px;
-            margin-bottom: 1rem;
-            background: #fff; /* Light mode background */
-            color: #333; /* Light mode text color */
-        }
-
-        .dark-mode .timezone-container select {
-            background: #2c2c2c; /* Dark mode background */
-            color: #e0e0e0; /* Dark mode text color */
-            border: 2px solid #444; /* Dark mode border color */
-        }
-
-        .timezone-container p {
-            font-size: 1.2rem;
-            color: #1a73e8;
-            text-align: center;
-        }
-
-        /* Dark Mode Toggle */
-        .dark-mode-toggle {
-            position: fixed;
-            top: 30px;
-            right: 40px;
-            width: 80px;
-            height: 40px;
-            padding: 0;
-            border-radius: 999px;
-            background: #F3F3F3;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            cursor: pointer;
-            border: none;
-            transition: 0.5s;
-            z-index: 1000;
-        }
-
-        .dark-mode .dark-mode-toggle {
-            background: #1F1F21;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-        }
-
-        .toggle-circle {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: white;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            position: absolute;
-            top: 50%;
-            left: 4px;
-            transform: translateY(-50%);
-            transition: 0.5s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .dark-mode .toggle-circle {
-            left: calc(100% - 36px);
-            background: #2C2C2F;
-            box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.5),
-                        -10px -10px 30px rgba(0, 0, 0, 0.5) inset;
-        }
-
-        .toggle-circle i.fa-sun {
-            color: #FFD600;
-            font-size: 16px;
-        }
-
-        .toggle-circle i.fa-moon {
-            color: white;
-            font-size: 16px;
-            display: none;
-        }
-
-        .dark-mode .toggle-circle i.fa-sun {
-            display: none;
-        }
-
-        .dark-mode .toggle-circle i.fa-moon {
-            display: block;
-        }
-
-        .dark-mode .dark-mode-toggle {
-            color: #fff;
-        }
-
-        .dark-mode-toggle:hover {
-            transform: scale(1.1);
-        }
-
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 1rem;
-            color: #010101;
-            margin-top: 2rem;
-            font-family: 'Georgia', serif;
-            font-size: 0.9rem;
-            background: transparent;
-        }
-
-        .dark-mode footer {
-            color: #888;
-            background: transparent;
-        }
-
-        /* WhatsApp Icon */
-        .whatsapp-icon {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: linear-gradient(145deg, #128C7E, #075E54);
-            color: white;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            cursor: pointer;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 4px 12px rgba(18, 140, 126, 0.3);
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            text-shadow: 0 1px  2px rgba(0, 0, 0, 0.2);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-                box-shadow: 0 4px 12px rgba(18, 140, 126, 0.3);
-            }
-            70% {
-                transform: scale(1.05);
-                box-shadow: 0 0 20px rgba(18, 140, 126, 0.4);
-            }
-            100% {
-                transform: scale(1);
-                box-shadow: 0 4px 12px rgba(18, 140, 126, 0.3);
-            }
-        }
-
-        .whatsapp-icon:hover {
-            background: #075E54;
-            transform: scale(1.05);
-            box-shadow: 0 6px 16px rgba(18, 140, 126, 0.4);
-            animation: none;
-        }
-
-        .dark-mode .whatsapp-icon {
-            background: linear-gradient(145deg, #075E54, #05433A);
-            box-shadow: 0 4px 12px rgba(18, 140, 126, 0.5);
-        }
-
-        .dark-mode .whatsapp-icon:hover {
-            background: #05433A;
-            box-shadow: 0 6px 16px rgba(18, 140, 126, 0.6);
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Precision 2% Daily Tracker</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+* {
+box-sizing: border-box;
+margin: 0;
+padding: 0;
+font-family: 'Arial', sans-serif;
+}
+
+body {
+background: #f0f2f5;
+color: #333;
+line-height: 1.6;
+transition: background 0.5s, color 0.5s;
+}
+
+.dark-mode {
+background: #121212;
+color: #e0e0e0;
+}
+
+.login-container {
+max-width: 400px;
+margin: 5% auto;
+padding: 2rem;
+background: #fff;
+border-radius: 12px;
+box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+text-align: center;
+transition: background 0.5s;
+}
+
+.dark-mode .login-container {
+background: #1f1f1f;
+}
+
+.login-container h2 {
+color: #1a73e8;
+margin-bottom: 1.5rem;
+}
+
+.login-container input {
+width: 100%;
+padding: 12px;
+margin: 8px 0;
+border: 2px solid #ddd;
+border-radius: 6px;
+font-size: 16px;
+transition: border-color 0.3s ease;
+background: #fff; /* Light mode background */
+color: #333; /* Light mode text color */
+}
+
+.dark-mode .login-container input {
+background: #2c2c2c; /* Dark mode background */
+color: #e0e0e0; /* Dark mode text color */
+border: 2px solid #444; /* Dark mode border color */
+}
+
+.login-container input:focus {
+border-color: #1a73e8;
+outline: none;
+}
+
+#dashboard {
+display: none;
+}
+
+.dashboard {
+max-width: 1200px;
+margin: 2rem auto;
+padding: 2rem;
+background: #fff; /* Light mode background */
+border-radius: 12px;
+box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+transition: background 0.5s;
+}
+
+.dark-mode .dashboard {
+background: #1f1f1f; /* Dark mode background */
+}
+
+.dashboard h2 {
+color: #1a73e8;
+text-align: center;
+margin-bottom: 2rem;
+font-size: 2.2rem;
+}
+
+.metrics {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+gap: 1.5rem;
+margin-bottom: 2rem;
+}
+
+.metric-box {
+background: #fff;
+padding: 1.5rem;
+border-radius: 10px;
+box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+text-align: center;
+transition: transform 0.3s ease;
+}
+
+.dark-mode .metric-box {
+background: #2c2c2c; /* Dark mode background */
+color: #e0e0e0; /* Dark mode text color */
+}
+
+.metric-box:hover {
+transform: translateY(-3px);
+}
+
+.metric-box h3 {
+color: #666;
+font-size: 1rem;
+margin-bottom: 0.5rem;
+}
+
+.metric-box p {
+font-size: 1.8rem;
+font-weight: bold;
+color: #1a73e8;
+}
+
+.copy-button {
+background: #1a73e8;
+color: white;
+border: none;
+padding: 5px 10px;
+border-radius: 5px;
+cursor: pointer;
+font-size: 14px;
+margin-top: 10px;
+transition: background 0 .3s;
+}
+
+.copy-button:hover {
+background: #1557b0;
+}
+
+.progress-container {
+background: #fff;
+padding: 2rem;
+border-radius: 10px;
+box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+margin: 2rem 0;
+}
+
+.dark-mode .progress-container {
+background: #2c2c2c; /* Dark mode background */
+}
+
+.progress-bar {
+background: #e0e0e0;
+height: 25px;
+border-radius: 12px;
+overflow: hidden;
+margin: 1rem 0;
+}
+
+.progress-fill {
+background: #1a73e8;
+height: 100%;
+width: 0%;
+transition: width 0.5s ease;
+}
+
+button {
+background: linear-gradient(145deg, #e0e0e0, #ffffff);
+color: #333;
+border: 1px solid #ccc;
+padding: 10px 20px;
+border-radius: 8px;
+cursor: pointer;
+font-size: 16px;
+transition: all 0.3s ease;
+margin: 0.5rem 0;
+box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+button:hover {
+background: linear-gradient(145deg, #ffffff, #e0e0e0);
+transform: translateY(-1px);
+}
+
+button:focus {
+outline: none;
+border-color: #1a73e8; /* Highlight border on focus */
+}
+
+.dark-mode button {
+background: #34a853; /* Dark mode button background */
+}
+
+.dark-mode .copy-button {
+background: #34a853; /* Dark mode copy button background */
+}
+
+.dark-mode .copy-button:hover {
+background: #2c7a2e; /* Dark mode copy button hover */
+}
+
+input[type="number"] {
+width: 100%;
+padding: 12px;
+margin: 8px 0;
+border: 2px solid #ddd;
+border-radius: 6px;
+font-size: 16px;
+background: #fff; /* Light mode background */
+color: #333; /* Light mode text color */
+}
+
+.dark-mode input[type="number"] {
+background: #2c2c2c; /* Dark mode background */
+color: #e0e0e0; /* Dark mode text color */
+border: 2px solid #444; /* Dark mode border color */
+}
+
+.split-trades {
+background: #fff;
+padding: 2rem;
+border-radius: 10px;
+box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+margin: 2rem 0;
+}
+
+.dark-mode .split-trades {
+background: #2c2c2c; /* Dark mode background */
+}
+
+.trade-group {
+margin-bottom: 2rem;
+background: #f8f9fa;
+padding: 1.5rem;
+border-radius: 8px;
+}
+
+.dark-mode .trade-group {
+background: #2c2c2c; /* Dark mode background */
+}
+
+.trade-summary {
+background: #e8f5e9;
+padding: 1rem;
+margin-bottom: 1.5rem;
+border-radius: 8px;
+border-left: 4px solid #34a853;
+}
+
+.dark-mode .trade-summary {
+background: #2c2c2c; /* Dark mode background */
+border-left: 4px solid #34a853; /* Keep the border color */
+}
+
+.trade-detail {
+background: #fff;
+padding: 1rem;
+margin: 1rem 0;
+border-radius: 8px;
+border-left: 4px solid #ffc107;
+}
+
+.dark-mode .trade-detail {
+background: #2c2c2c; /* Dark mode background */
+border-left: 4px solid #ffc107; /* Keep the border color */
+}
+
+.trade-stats {
+display: flex;
+justify-content: space-between;
+margin-top: 0.5rem;
+}
+
+.trade-stats span {
+font-size: 0.9rem;
+color: #666;
+}
+
+.logout-btn {
+background: #f44336;
+float: right;
+}
+
+.logout-btn:hover {
+background: #d32f2f;
+}
+
+.trade-calculator {
+background: white;
+padding: 2rem;
+border-radius: 10px;
+box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+margin: 2rem 0;
+}
+
+.dark-mode .trade-calculator {
+background: #2c2c2c; /* Dark mode background */
+}
+
+.trade-calculator h3 {
+color: #1a73e8;
+margin-bottom: 1.5rem;
+border-bottom: 2px solid #1a73e8;
+padding-bottom: 0.5rem;
+}
+
+.calculator-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+gap: 1.5rem;
+margin-bottom: 1.5rem;
+}
+
+.direction-select {
+width: 100%;
+padding: 12px;
+border: 2px solid #ddd;
+border-radius: 6px;
+font-size: 16px;
+background: white; /* Light mode background */
+transition: all 0.3s ease;
+}
+
+.dark-mode .direction-select {
+background: #2c2c2c; /* Dark mode background */
+color: #e0e0e0; /* Dark mode text color */
+border: 2px solid #444; /* Dark mode border color */
+}
+
+.direction-select:focus {
+border-color: #1a73e8;
+outline: none;
+box-shadow: 0 0 5px rgba(26, 115, 232, 0.3);
+}
+
+.calculate-btn {
+background: linear-gradient(145deg, #e0e0e0, #ffffff);
+color: #333;
+border: 1px solid #ccc;
+padding: 10px 20px;
+border-radius: 8px;
+cursor: pointer;
+font-size: 16px;
+font-weight: bold;
+letter-spacing: 0.5px;
+transition: all 0.3s ease;
+width: 100%; /* Ensure it takes full width */
+box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.calculate-btn:hover {
+background: linear-gradient(145deg, #ffffff, #e0e0e0);
+transform: translateY(-1px);
+}
+
+.calculate-btn:focus {
+outline: none;
+border-color: #1a73e8; /* Highlight border on focus */
+}
+
+.trade-results-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+gap: 1rem;
+margin-top: 1.5rem;
+}
+
+.result-item {
+background: #f8f9fa;
+padding: 1rem;
+border-radius: 8px;
+text-align: center;
+}
+
+.dark-mode .result-item {
+background: #2c2c2c; /* Dark mode background */
+}
+
+.result-item h4 {
+color: #666;
+font-size: 0.9rem;
+margin-bottom: 0.5rem;
+}
+
+.result-value {
+font-size: 1.2rem;
+font-weight: bold;
+color: #1a73e8;
+}
+
+.rise-option { color: #34a853; }
+.fall-option { color: #ea4335; }
+
+@media (max-width: 768px) {
+.dashboard {
+padding: 1rem;
+}
+
+.metrics {
+grid-template-columns: 1fr 1fr;
+}
+
+.login-container {
+margin: 20% 1rem;
+width: auto;
+}
+}
+
+.timezone-container {
+margin: 1rem 0;
+padding: 1rem;
+background: #fff;
+border-radius: 10px;
+box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.dark-mode .timezone-container {
+background: #2c2c2c; /* Dark mode background */
+}
+
+.timezone-container input {
+width: 100%;
+padding: 12px;
+border: 2px solid #ddd;
+border-radius: 6px;
+font-size: 16px;
+margin-bottom: 1rem;
+background: #fff; /* Light mode background */
+color: #333; /* Light mode text color */
+}
+
+.dark-mode .timezone-container input {
+background: #2c2c2c; /* Dark mode background */
+color: #e0e0e0; /* Dark mode text color */
+border: 2px solid #444; /* Dark mode border color */
+}
+
+.timezone-container select {
+width: 100%;
+padding: 12px;
+border: 2px solid #ddd;
+border-radius: 6px;
+font-size: 16px;
+margin-bottom: 1rem;
+background: #fff; /* Light mode background */
+color: #333; /* Light mode text color */
+}
+
+.dark-mode .timezone-container select {
+background: #2c2c2c; /* Dark mode background */
+color: #e0e0e0; /* Dark mode text color */
+border: 2px solid #444; /* Dark mode border color */
+}
+
+.timezone-container p {
+font-size: 1.2rem;
+color: #1a73e8;
+text-align: center;
+}
+
+/* Dark Mode Toggle */
+.dark-mode-toggle {
+position: fixed;
+top: 30px;
+right: 40px;
+width: 80px;
+height: 40px;
+padding: 0;
+border-radius: 999px;
+background: #F3F3F3;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+cursor: pointer;
+border: none;
+transition: 0.5s;
+z-index: 1000;
+}
+
+.dark-mode .dark-mode-toggle {
+background: #1F1F21;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.toggle-circle {
+width: 32px;
+height: 32px;
+border-radius: 50%;
+background: white;
+box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+position: absolute;
+top: 50%;
+left: 4px;
+transform: translateY(-50%);
+transition: 0.5s;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+
+.dark-mode .toggle-circle {
+left: calc(100% - 36px);
+background: #2C2C2F;
+box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.5),
+-10px -10px 30px rgba(0, 0, 0, 0.5) inset;
+}
+
+.toggle-circle i.fa-sun {
+color: #FFD600;
+font-size: 16px;
+}
+
+.toggle-circle i.fa-moon {
+color: white;
+font-size: 16px;
+display: none;
+}
+
+.dark-mode .toggle-circle i.fa-sun {
+display: none;
+}
+
+.dark-mode .toggle-circle i.fa-moon {
+display: block;
+}
+
+.dark-mode .dark-mode-toggle {
+color: #fff;
+}
+
+.dark-mode-toggle:hover {
+transform: scale(1.1);
+}
+
+/* Footer */
+footer {
+text-align: center;
+padding: 1rem;
+color: #010101;
+margin-top: 2rem;
+font-family: 'Georgia', serif;
+font-size: 0.9rem;
+background: transparent;
+}
+
+.dark-mode footer {
+color: #888;
+background: transparent;
+}
+
+/* WhatsApp Icon */
+.whatsapp-icon {
+position: fixed;
+bottom: 30px;
+right: 30px;
+background: linear-gradient(145deg, #128C7E, #075E54);
+color: white;
+width: 60px;
+height: 60px;
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 32px;
+cursor: pointer;
+border: 2px solid rgba(255, 255, 255, 0.2);
+box-shadow: 0 4px 12px rgba(18, 140, 126, 0.3);
+transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+0% {
+transform: scale(1);
+box-shadow: 0 4px 12px rgba(18, 140, 126, 0.3);
+}
+70% {
+transform: scale(1.05);
+box-shadow: 0 0 20px rgba(18, 140, 126, 0.4);
+}
+100% {
+transform: scale(1);
+box-shadow: 0 4px 12px rgba(18, 140, 126, 0.3);
+}
+}
+
+.whatsapp-icon:hover {
+background: #075E54;
+transform: scale(1.05);
+box-shadow: 0 6px 16px rgba(18, 140, 126, 0.4);
+animation: none;
+}
+
+.dark-mode .whatsapp-icon {
+background: linear-gradient(145deg, #075E54, #05433A);
+box-shadow: 0 4px 12px rgba(18, 140, 126, 0.5);
+}
+
+.dark-mode .whatsapp-icon:hover {
+background: #05433A;
+box-shadow: 0 6px 16px rgba(18, 140, 126, 0.6);
+}
+
+.withdrawal-results-grid {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1.5rem;
+}
+
+.withdrawal-result-item {
+    flex: 1; /* Allow both sections to take equal space */
+    margin-right: 1rem; /* Add some space between the two sections */
+}
+
+.withdrawal-result-item:last-child {
+    margin-right: 0; /* Remove margin from the last child */
+}
+
+.withdrawal-result-item h4 {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.withdrawal-result-value {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #1a73e8;
+}
+</style>
 </head>
 <body>
-    <!-- Dark Mode Toggle -->
-    <button class="dark-mode-toggle" onclick="toggleDarkMode()">
-        <div class="toggle-circle">
-            <i class="fas fa-sun"></i>
-            <i class="fas fa-moon"></i>
-        </div>
-    </button>
+<!-- Dark Mode Toggle -->
+<button class="dark-mode-toggle" onclick="toggleDarkMode()">
+<div class="toggle-circle">
+<i class="fas fa-sun"></i>
+<i class="fas fa-moon"></i>
+</div>
+</button>
 
-    <!-- Login Section -->
-    <div class="login-container" id="loginSection">
-        <h2>Accelerator Portal ✅</h2>
-        <input type="text" id="username" placeholder="Username">
-        <input type="password" id="password" placeholder="Password">
-        <button onclick="login()">Access Dashboard</button>
-    </div>
+<!-- Login Section -->
+<div class="login-container" id="loginSection">
+<h2>Accelerator Portal ✅</h2>
+<input type="text" id="username" placeholder="Username">
+<input type="password" id="password" placeholder="Password">
+<button onclick="login()">Access Dashboard</button>
+</div>
 
-    <!-- Dashboard Section -->
-    <div class="dashboard" id="dashboard">
-        <h2>Progress Tracker</h2>
-        
-        <!-- Metrics Grid -->
-        <div class="metrics">
-            <div class="metric-box">
-                <h3>Current Balance</h3>
-                <p id="currentBalance">$0.00</p>
-            </div>
-            <div class="metric-box">
-                <h3>Days Remaining</h3>
-                <p id="daysRemaining">0</p>
-            </div>
-            <div class="metric-box">
-                <h3>Today's Target</h3>
-                <p id="dailyTarget">$0.00</p>
-            </div>
-            <div class="metric-box">
-                <h3>Stop Loss (5%)</h3>
-                <p id="stopLossAmount">$0.00</p>
-                <button class="copy-button" onclick="copyToClipboard('stopLossAmount')">Copy</button>
-            </div>
-            <div class="metric-box">
-                <h3>Recommended Lot Size</h3>
-                <p id="lotSize">0.000</p>
-                <button class="copy-button" onclick="copyToClipboard('lotSize')">Copy</button>
-            </div>
-        </div>
+<!-- Dashboard Section -->
+<div class="dashboard" id="dashboard">
+<h2>Progress Tracker</h2>
 
-        <!-- Time Zone Section -->
-        <div class="timezone-container">
-            <h3>Select Time Zone</h3>
-            <input type="text" id="timezoneSearch" placeholder="Search for a time zone..." onkeyup="filterTimeZones()">
-            <select id="timeZoneSelector" onchange="updateTime()"></select>
-            <p id="currentDateTime">Current Date and Time: -</p>
-        </div>
+<!-- Metrics Grid -->
+<div class="metrics">
+<div class="metric-box">
+<h3>Current Balance</h3>
+<p id="currentBalance">$0.00</p>
+</div>
+<div class="metric-box">
+<h3>Days Remaining</h3>
+<p id="daysRemaining">0</p>
+</div>
+<div class="metric-box">
+<h3>Today's Target</h3>
+<p id="dailyTarget">$0.00</p>
+</div>
+<div class="metric-box">
+<h3>Stop Loss (5%)</h3>
+<p id="stopLossAmount">$0.00</p>
+<button class="copy-button" onclick="copyToClipboard('stopLossAmount')">Copy</button>
+</div>
+<div class="metric-box">
+<h3>Recommended Lot Size</h3>
+<p id="lotSize">0.000</p>
+<button class="copy-button" onclick="copyToClipboard('lotSize')">Copy</button>
+</div>
+</div>
 
-        <!-- Progress Bar -->
-        <div class="progress-container">
-            <h3>Progress to $1,000,000</h3>
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressFill"></div>
-            </div>
-            <br>
-            <input type="number" id="dailyInput" placeholder="Enter current account balance">
-            <button onclick="updateBalance()">Update Progress</button>
-            <button onclick="logout()" class="logout-btn">Logout</button>
-        </div>
+<!-- Time Zone Section -->
+<div class="timezone-container">
+<h3>Select Time Zone</h3>
+<input type="text" id="timezoneSearch" placeholder="Search for a time zone..." onkeyup="filterTimeZones()">
+<select id="timeZoneSelector" onchange="updateTime()"></select>
+<p id="currentDateTime">Current Date and Time: -</p>
+</div>
 
-        <!-- Split Trades Section -->
-        <div class="split-trades" id="splitTradesSection">
-            <h3>Trade Management</h3>
-            <div id="splitTradesOutput"></div>
-        </div>
+<!-- Progress Bar -->
+<div class="progress-container">
+<h3>Progress to $1,000,000</h3>
+<div class="progress-bar">
+<div class="progress-fill" id="progressFill"></div>
+</div>
+<br>
+<input type="number" id="dailyInput" placeholder="Enter current account balance">
+<button onclick="updateBalance()">Update Progress</button>
+<button onclick="logout()" class="logout-btn">Logout</button>
+</div>
 
-        <!-- Enhanced Trade Calculator Section -->
-        <div class="trade-calculator">
-            <h3>Trade Calculator</h3>
-            <div class="calculator-grid">
-                <div>
-                    <label for="entryPrice">Entry Price</label>
-                    <input type="number" id="entryPrice" placeholder="Enter entry price">
-                </div>
-                <div>
-                    <label for="tradeDirection">Trade Direction</label>
-                    <select id="tradeDirection" class="direction-select">
-                        <option value="rise" class="rise-option">▲ Rise Trade (Buy)</option>
-                        <option value="fall" class="fall-option">▼ Fall Trade (Sell)</option>
-                    </select>
-                </div>
-            </div>
-            <button class="calculate-btn" onclick="calculateTradePoints()">Calculate Trade Parameters</button>
-            
-            <div class="trade-results-grid">
-                <div class="result-item">
-                    <h4>Take Profit (TP 500 pips)</h4>
-                    <div class="result-value" id="tpPrice">-</div>
-                    <button class="copy-button" onclick="copyToClipboard('tpPrice')">Copy</button>
-                </div>
-                <div class="result-item">
-                    <h4>Take Profit (TP 3000 pips)</h4>
-                    <div class="result-value" id="tpPrice3000">-</div>
-                    <button class="copy-button" onclick="copyToClipboard('tpPrice3000')">Copy</button>
-                </div>
-                <div class="result-item">
-                    <h4>Stop Loss (SL)</h4>
-                    <div class="result-value" id="slPrice">-</div>
-                    <button class="copy-button" onclick="copyToClipboard('slPrice')">Copy</button>
-                </div>
-                <div class="result-item">
-                    <h4>Lot Size</h4>
-                    <div class="result-value" id="calculatedLots">-</div>
-                    <button class="copy-button" onclick="copyToClipboard('calculatedLots')">Copy</button>
-                </div>
-            </div>
-        </div>
+<!-- Split Trades Section -->
+<div class="split-trades" id="splitTradesSection">
+<h3>Trade Management</h3>
+<div id="splitTradesOutput"></div>
+</div>
 
-        <!-- Compounding Calculator Section -->
-        <div class="trade-calculator">
+<!-- Enhanced Trade Calculator Section -->
+<div class="trade-calculator">
+<h3>Trade Calculator</h3>
+<div class="calculator-grid">
+<div>
+<label for="entryPrice">Entry Price</label>
+<input type="number" id="entryPrice" placeholder="Enter entry price">
+</div>
+<div>
+<label for="tradeDirection">Trade Direction</label>
+<select id="tradeDirection" class="direction-select">
+<option value="rise" class="rise-option">▲ Rise Trade (Buy)</option>
+<option value="fall" class="fall-option">▼ Fall Trade (Sell)</option>
+</select>
+</div>
+<div>
+<label for="customTP">Custom Take Profit (in pips)</label>
+<input type="number" id="customTP" placeholder="Enter pips for TP" value="500">
+</div>
+</div>
+<button class="calculate-btn" onclick="calculateTradePoints()">Calculate Trade Parameters</button>
+
+<div class="trade-results-grid">
+<div class="result-item">
+<h4>Take Profit (TP 500 pips)</h4>
+<div class="result-value" id="tpPrice">-</div>
+<button class="copy-button" onclick="copyToClipboard('tpPrice')">Copy</button>
+</div>
+<div class="result-item">
+<h4>Take Profit (TP 3k pips) (default)</h4>
+<div class="result-value" id="tpPrice3000">-</div>
+<button class="copy-button" onclick="copyToClipboard('tpPrice3000')">Copy</button>
+</div>
+<div class="result-item">
+<h4>Custom Take Profit (TP)</h4>
+<div class="result-value" id="tpCustomPrice">-</div>
+<button class="copy-button" onclick="copyToClipboard('tpCustomPrice')">Copy</button>
+</div>
+<div class="result-item">
+<h4>Stop Loss (SL)</h4>
+<div class="result-value" id="slPrice">-</div>
+<button class="copy-button" onclick="copyToClipboard('slPrice')">Copy</button>
+</div>
+<div class="result-item">
+<h4>Lot Size</h4>
+<div class="result-value" id="calculatedLots">-</div>
+<button class="copy-button" onclick="copyToClipboard('calculatedLots')">Copy</button>
+</div>
+</div>
+</div>
+ <div class="trade-calculator">
             <h3>Compounding Calculator</h3>
             <div class="calculator-grid">
                 <div>
@@ -747,7 +782,7 @@
                 </div>
             </div>
             <button class="calculate-btn" onclick="calculateCompounding()">Calculate Growth</button>
-            
+
             <div class="trade-results-grid">
                 <div class="result-item">
                     <h4>Projected Balance</h4>
@@ -759,198 +794,223 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Footer -->
-    <footer>
-        Made with 💖 by Antony
-    </footer>
+        <!-- Withdrawal Calculation Section -->
+        <div class="withdrawal-container">
+            <div>
+                <h3>Withdrawal Calculation</h3>
+                <input type="number" id="manualBalance" placeholder="Enter current balance" />
+                <button onclick="calculateWithdrawal()">Calculate Withdrawal Amount</button>
+                <div id="withdrawalOutput"></div>
+            </div>
+        </div>
 
-    <!-- WhatsApp Icon -->
-    <div class="whatsapp-icon" onclick="redirectToWhatsApp()">
-        <i class="fab fa-whatsapp"></i>
-    </div>
+<!-- Footer -->
+<footer>
+Made with 💖 by Antony
+</footer>
 
-    <script>
-        let currentBalance = parseFloat(localStorage.getItem('currentBalance')) || 50;
-        let tradesToday = parseInt(localStorage.getItem('tradesToday')) || 0;
-        let lastTradeDate = localStorage.getItem('lastTradeDate') || '';
+<!-- WhatsApp Icon -->
+<div class="whatsapp-icon" onclick="redirectToWhatsApp()">
+<i class="fab fa-whatsapp"></i>
+</div>
 
-        const timeZones = Intl.supportedValuesOf('timeZone');
+<script>
+let currentBalance = parseFloat(localStorage.getItem('currentBalance')) || 50;
+let tradesToday = parseInt(localStorage.getItem('tradesToday')) || 0;
+let lastTradeDate = localStorage.getItem('lastTradeDate') || '';
+let lastWithdrawalDate = localStorage.getItem('lastWithdrawalDate') || '';
 
-        function login() {
-            if (document.getElementById('username').value === 'admin' &&
-                document.getElementById('password').value === 'profits') {
-                document.getElementById('loginSection').style.display = 'none';
-                document.getElementById('dashboard').style.display = 'block';
-                checkDateReset();
-                updateDisplay();
-                startClock();
-            } else {
-                alert('Invalid credentials');
-            }
-        }
+const timeZones = Intl.supportedValuesOf('timeZone');
 
-        function checkDateReset() {
-            const today = new Date().toDateString();
-            if (today !== lastTradeDate) {
-                tradesToday = 0;
- lastTradeDate = today;
-                localStorage.setItem('tradesToday', tradesToday);
-                localStorage.setItem('lastTradeDate', lastTradeDate);
-            }
-        }
+function login() {
+    if (document.getElementById('username').value === 'admin' &&
+        document.getElementById('password').value === 'profits') {
+        document.getElementById('loginSection').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+        checkDateReset();
+        updateDisplay();
+        startClock();
+    } else {
+        alert('Invalid credentials');
+    }
+}
 
-        function copyToClipboard(elementId) {
-            const textToCopy = document.getElementById(elementId).textContent;
-            navigator.clipboard.writeText(textToCopy).then(() => {
-                alert('Copied to clipboard: ' + textToCopy);
-            }).catch(err => {
-                console.error('Error copying text: ', err);
+function checkDateReset() {
+    const today = new Date().toDateString();
+    if (today !== lastTradeDate) {
+        tradesToday = 0;
+        lastTradeDate = today;
+        localStorage.setItem('tradesToday', tradesToday);
+        localStorage.setItem('lastTradeDate', lastTradeDate);
+    }
+}
+
+function copyToClipboard(elementId) {
+    const textToCopy = document.getElementById(elementId).textContent;
+    navigator.clipboard.writeText(textToCopy).then(() => {
+        alert('Copied to clipboard: ' + textToCopy);
+    }).catch(err => {
+        console.error('Error copying text: ', err);
+    });
+}
+
+function calculateTradeGroups() {
+    const DAILY_TARGET_PERCENT = 0.02;
+    const PER_TRADE_PIPS = 500;
+    const MAX_LOT_SIZE = 5;
+
+    const dailyTarget = currentBalance * DAILY_TARGET_PERCENT;
+    const perTradeAmount = currentBalance * 0.01;
+    const baseLots = perTradeAmount / PER_TRADE_PIPS;
+
+    const createTradeGroup = () => {
+        const trades = [];
+        let remaining = baseLots;
+        while (remaining > 0) {
+            const lots = Math.min(MAX_LOT_SIZE, remaining);
+            trades.push({
+                lots: lots.toFixed(3),
+                profit: (lots * PER_TRADE_PIPS).toFixed(2),
+                percent: ((lots * PER_TRADE_PIPS / currentBalance) * 100).toFixed(2)
             });
+            remaining -= lots;
         }
+        return trades;
+    };
 
-        function calculateTradeGroups() {
-            const DAILY_TARGET_PERCENT = 0.02;
-            const PER_TRADE_PIPS = 500;
-            const MAX_LOT_SIZE = 5;
-            
-            const dailyTarget = currentBalance * DAILY_TARGET_PERCENT;
-            const perTradeAmount = currentBalance * 0.01;
-            const baseLots = perTradeAmount / PER_TRADE_PIPS;
-            
-            const createTradeGroup = () => {
-                const trades = [];
-                let remaining = baseLots;
-                while(remaining > 0) {
-                    const lots = Math.min(MAX_LOT_SIZE, remaining);
-                    trades.push({
-                        lots: lots.toFixed(3),
-                        profit: (lots * PER_TRADE_PIPS).toFixed(2),
-                        percent: ((lots * PER_TRADE_PIPS / currentBalance) * 100).toFixed(2)
-                    });
-                    remaining -= lots;
-                }
-                return trades;
-            };
+    return {
+        groups: [createTradeGroup(), createTradeGroup()],
+        dailyTarget: dailyTarget
+    };
+}
 
-            return {
-                groups: [createTradeGroup(), createTradeGroup()],
-                dailyTarget: dailyTarget
-            };
+function updateDisplay() {
+    const target = 1000000;
+    const tradePlan = calculateTradeGroups();
+    const totalTrades = tradePlan.groups.flat().length;
+    const remainingTrades = Math.max(totalTrades - tradesToday, 0);
+
+    // Update top metrics
+    document.getElementById('currentBalance').textContent = `$${currentBalance.toFixed(2)}`;
+    document.getElementById('daysRemaining').textContent = Math.ceil(
+        Math.log(target / currentBalance) / Math.log(1.02)
+    );
+    document.getElementById('dailyTarget').textContent = `$${(currentBalance * 0.02).toFixed(2)}`;
+    document.getElementById('stopLossAmount').textContent = `$${(currentBalance * 0.05).toFixed(2)}`;
+    document.getElementById('lotSize').textContent = (currentBalance * 0.01 / 500).toFixed(3);
+
+    // Update progress bar
+    document.getElementById('progressFill').style.width =
+        `${Math.min((currentBalance / target) * 100, 100)}%`;
+
+    // Build trade plan display
+    let outputHtml = `
+    <div class="trade-summary">
+    <strong>Daily Target:</strong> $${tradePlan.dailyTarget.toFixed(2)}<br>
+    <strong>Total Trades Required:</strong> ${totalTrades}<br>
+    <strong>Completed Trades:</strong> ${tradesToday}<br>
+    <strong>Remaining Trades:</strong> ${remainingTrades}
+    </div>`;
+
+    tradePlan.groups.forEach((group, groupIndex) => {
+        const groupLots = group.reduce((sum, trade) => sum + parseFloat(trade.lots), 0).toFixed(3);
+        outputHtml += `
+        <div class="trade-group">
+        <h4>1% Target Group ${groupIndex + 1} (${group.length} trades, ${groupLots} lots total)</h4>`;
+
+        group.forEach((trade, tradeIndex) => {
+            const status = tradesToday > (groupIndex * group.length + tradeIndex)
+                ? "✅ Completed"
+                : "🟡 Pending";
+
+            outputHtml += `
+            <div class="trade-detail">
+            <div class="trade-stats">
+            <span>Trade ${tradeIndex + 1}</span>
+            <span>Lots: ${trade.lots}</span>
+            <span>Profit: $${trade.profit}</span>
+            <span>Status: ${status}</span>
+            </div>
+            </div>`;
+        });
+
+        outputHtml += `</div>`;
+    });
+
+    document.getElementById('splitTradesOutput').innerHTML = outputHtml;
+
+    // Check if today is the end of the month
+    checkEndOfMonthReminder();
+}
+
+function checkEndOfMonthReminder() {
+    const today = new Date();
+    const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+
+    if (today.getDate() === lastDayOfMonth) {
+        alert("Reminder: It's the end of the month! Don't forget to withdraw your profits.");
+    }
+}
+
+function updateBalance() {
+    const newBalance = parseFloat(document.getElementById('dailyInput').value);
+    if (!isNaN(newBalance) && newBalance > 0) {
+        const today = new Date().toDateString();
+        if (today !== lastTradeDate) {
+            tradesToday = 0;
+            lastTradeDate = today;
         }
+        tradesToday++;
+        currentBalance = newBalance;
 
-        function updateDisplay() {
-            const target = 1000000;
-            const tradePlan = calculateTradeGroups();
-            const totalTrades = tradePlan.groups.flat().length;
-            const remainingTrades = Math.max(totalTrades - tradesToday, 0);
-            
-            // Update top metrics
-            document.getElementById('currentBalance').textContent = `$${currentBalance.toFixed(2)}`;
-            document.getElementById('daysRemaining').textContent = Math.ceil(
-                Math.log(target / currentBalance) / Math.log(1.02)
-            );
-            document.getElementById('dailyTarget').textContent = `$${(currentBalance * 0.02).toFixed(2)}`;
-            document.getElementById('stopLossAmount').textContent = `$${(currentBalance * 0.05).toFixed(2)}`;
-            document.getElementById('lotSize').textContent = (currentBalance * 0.01 / 500).toFixed(3);
-            
-            // Update progress bar
-            document.getElementById('progressFill').style.width = 
-                `${Math.min((currentBalance / target) * 100, 100)}%`;
+        localStorage.setItem('currentBalance', currentBalance);
+        localStorage.setItem('tradesToday', tradesToday);
+        localStorage.setItem('lastTradeDate', lastTradeDate);
 
-            // Build trade plan display
-            let outputHtml = `
-                <div class="trade-summary">
-                    <strong>Daily Target:</strong> $${tradePlan.dailyTarget.toFixed(2)}<br>
-                    <strong>Total Trades Required:</strong> ${totalTrades}<br>
-                    <strong>Completed Trades:</strong> ${tradesToday}<br>
-                    <strong>Remaining Trades:</strong> ${remainingTrades}
-                </div>`;
+        updateDisplay();
+    }
+}
 
-            tradePlan.groups.forEach((group, groupIndex) => {
-                const groupLots = group.reduce((sum, trade) => sum + parseFloat(trade.lots), 0).toFixed(3);
-                outputHtml += `
-                    <div class="trade-group">
-                        <h4>1% Target Group ${groupIndex + 1} (${group.length} trades, ${groupLots} lots total)</h4>`;
-                
-                group.forEach((trade, tradeIndex) => {
-                    const status = tradesToday > (groupIndex * group.length + tradeIndex) 
-                        ? "✅ Completed" 
-                        : "🟡 Pending";
-                    
-                    outputHtml += `
-                        <div class="trade-detail">
-                            <div class="trade-stats">
-                                <span>Trade ${tradeIndex + 1}</span>
-                                <span>Lots: ${trade.lots}</span>
-                                <span>Profit: $${trade.profit}</span>
-                                <span>Status: ${status}</span>
-                            </div>
-                        </div>`;
-                });
-                
-                outputHtml += `</div>`;
-            });
+function calculateTradePoints() {
+    const entryPrice = parseFloat(document.getElementById('entryPrice').value);
+    const direction = document.getElementById('tradeDirection').value;
+    const customTP = parseInt(document.getElementById('customTP').value) || 500; // Default to 500 if empty
+    const perTradeAmount = currentBalance * 0.01;
+    const lots = Math.min(perTradeAmount / 500, 5);
 
-            document.getElementById('splitTradesOutput').innerHTML = outputHtml;
-        }
+    const tpCustom = direction === 'rise' ? entryPrice + customTP : entryPrice - customTP;
+    const tp500 = direction === 'rise' ? entryPrice + 500 : entryPrice - 500;
+    const tp3000 = direction === 'rise' ? entryPrice + 3000 : entryPrice - 3000;
+    const sl = direction === 'rise'
+        ? entryPrice - (currentBalance * 0.05 / lots)
+        : entryPrice + (currentBalance * 0.05 / lots);
 
-        function updateBalance() {
-            const newBalance = parseFloat(document.getElementById('dailyInput').value);
-            if (!isNaN(newBalance) && newBalance > 0) {
-                const today = new Date().toDateString();
-                if (today !== lastTradeDate) {
-                    tradesToday = 0;
-                    lastTradeDate = today;
-                }
-                tradesToday++;
-                currentBalance = newBalance;
-                
-                localStorage.setItem('currentBalance', currentBalance);
-                localStorage.setItem('tradesToday', tradesToday);
-                localStorage.setItem('lastTradeDate', lastTradeDate);
-                
-                updateDisplay();
-            }
-        }
+    document.getElementById('tpPrice').textContent = tp500.toFixed(2);
+    document.getElementById('tpPrice3000').textContent = tp3000.toFixed(2);
+    document.getElementById('slPrice').textContent = sl.toFixed(2);
+    document.getElementById('calculatedLots').textContent = lots.toFixed(3);
+    document.getElementById('tpCustomPrice').textContent = tpCustom.toFixed(2); // Add this line
+}
 
-        function calculateTradePoints() {
-            const entryPrice = parseFloat(document.getElementById('entryPrice').value);
-            const direction = document.getElementById('tradeDirection').value;
-            const perTradeAmount = currentBalance * 0.01;
-            const lots = Math.min(perTradeAmount / 500, 5);
-            
-            const tp500 = direction === 'rise' ? entryPrice + 500 : entryPrice - 500;
-            const tp3000 = direction === 'rise' ? entryPrice + 3000 : entryPrice - 3000;
-            const sl = direction === 'rise' 
-                ? entryPrice - (currentBalance * 0.05 / lots)
-                : entryPrice + (currentBalance * 0.05 / lots);
-            
-            document.getElementById('tpPrice').textContent = tp500.toFixed(2);
-            document.getElementById('tpPrice3000').textContent = tp3000.toFixed(2);
-            document.getElementById('slPrice').textContent = sl.toFixed(2);
-            document.getElementById('calculatedLots').textContent = lots.toFixed(3);
-        }
+function logout() {
+    document.getElementById('loginSection').style.display = 'block';
+    document.getElementById('dashboard').style.display = 'none';
+    document.getElementById('username').value = '';
+    document.getElementById('password').value = '';
+}
 
-        function logout() {
-            document.getElementById('loginSection').style.display = 'block';
-            document.getElementById('dashboard').style.display = 'none';
-            document.getElementById('username').value = '';
-            document.getElementById('password').value = '';
-        }
+function initTimeZones() {
+    const selector = document.getElementById('timeZoneSelector');
+    timeZones.forEach(zone => {
+        const option = document.createElement('option');
+        option.value = zone;
+        option.textContent = zone;
+        selector.appendChild(option);
+    });
+}
 
-        function initTimeZones() {
-            const selector = document.getElementById('timeZoneSelector');
-            timeZones.forEach(zone => {
-                const option = document.createElement('option');
-                option.value = zone;
-                option.textContent = zone;
-                selector.appendChild(option);
-            });
-        }
-
-        function updateTime() {
+function updateTime() {
     const timeZone = document.getElementById('timeZoneSelector').value;
     const options = {
         timeZone: timeZone,
@@ -964,83 +1024,128 @@
         second: 'numeric'
     };
     const date = new Date().toLocaleString('en-US', options);
-    document.getElementById('currentDateTime').innerHTML = `Current Date and Time:<br>${date}`; 
+    document.getElementById('currentDateTime').innerHTML = `Current Date and Time:<br>${date}`;
+}
+
+function filterTimeZones() {
+    const searchInput = document.getElementById('timezoneSearch').value.toLowerCase();
+    const selector = document.getElementById('timeZoneSelector');
+    selector.innerHTML = ''; // Clear existing options
+
+    const filteredZones = timeZones.filter(zone =>
+        zone.toLowerCase().includes(searchInput)
+    );
+
+    filteredZones.forEach(zone => {
+        const option = document.createElement('option');
+        option.value = zone;
+        option.textContent = zone;
+        selector.appendChild(option);
+    });
+
+    // Update the displayed time with the first filtered option if needed
+    if (filteredZones.length > 0) {
+        selector.value = filteredZones[0];
+        updateTime();
+    }
+}
+
+function calculateCompounding() {
+    const initialBalance = parseFloat(document.getElementById('initialBalance').value);
+    const frequency = document.getElementById('compoundFrequency').value;
+    const periods = parseFloat(document.getElementById('period').value);
+
+    if (isNaN(initialBalance) || isNaN(periods) || initialBalance <= 0 || periods <= 0) {
+        alert('Please enter valid values for initial balance and period.');
+        return;
+    }
+
+    let days;
+    switch (frequency) {
+        case 'daily':
+            days = periods;
+            break;
+        case 'monthly':
+            days = periods * 30;
+            break;
+        case 'yearly':
+            days = periods * 365;
+            break;
+        default:
+            days = 0;
+    }
+
+    const projectedBalance = initialBalance * Math.pow(1.02, days);
+    const totalGrowth = projectedBalance - initialBalance;
+
+    document.getElementById('projectedBalance').textContent = `$${projectedBalance.toFixed(2)}`;
+    document.getElementById('totalGrowth').textContent = `$${totalGrowth.toFixed(2)}`;
+}
+
+function calculateWithdrawal() {
+    const manualBalance = parseFloat(document.getElementById('manualBalance').value);
+    if (isNaN(manualBalance) || manualBalance <= 0) {
+        alert('Please enter a valid balance.');
+        return;
+    }
+
+    const today = new Date();
+    const currentMonth = today.getMonth();
+    const currentYear = today.getFullYear();
+
+    // Check monthly withdrawal eligibility
+    if (lastWithdrawalDate) {
+        const lastDate = new Date(lastWithdrawalDate);
+        if (lastDate.getMonth() !== currentMonth || lastDate.getFullYear() !== currentYear) {
+            alert('You can withdraw your profits for this month!');
+            localStorage.setItem('lastWithdrawalDate', today.toISOString());
         }
+    } else {
+        localStorage.setItem('lastWithdrawalDate', today.toISOString());
+    }
 
-        function filterTimeZones() {
-            const searchInput = document.getElementById('timezoneSearch').value.toLowerCase();
-            const selector = document.getElementById('timeZoneSelector');
-            selector.innerHTML = ''; // Clear existing options
+    // Calculate 30-day growth
+    let simulatedBalance = manualBalance;
+    for (let i = 0; i < 30; i++) {
+        simulatedBalance = simulatedBalance / 1.02; // Reverse daily 2% growth
+    }
+    
+    const totalGrowth = manualBalance - simulatedBalance;
+    const withdrawableAmount = totalGrowth * 0.05;
 
-            const filteredZones = timeZones.filter(zone => 
-                zone.toLowerCase().includes(searchInput)
-            );
+    // Display results
+    document.getElementById('withdrawalOutput').innerHTML = `
+        <div class="result-item">
+            <h4>Total Growth Over 30 Days</h4>
+            <div class="result-value">$${totalGrowth.toFixed(2)}</div>
+        </div>
+        <div class="result-item">
+            <h4>Withdrawable Amount</h4>
+            <div class="result-value" id="withdrawableAmount">$${withdrawableAmount.toFixed(2)}</div>
+            <button class="copy-button" onclick="copyToClipboard('withdrawableAmount')">Copy</button>
+        </div>
+    `;
+}
 
-            filteredZones.forEach(zone => {
-                const option = document.createElement('option');
-                option.value = zone;
-                option.textContent = zone;
-                selector.appendChild(option);
-            });
+function startClock() {
+    setInterval(updateTime, 1000);
+}
 
-            // Update the displayed time with the first filtered option if needed
-            if (filteredZones.length > 0) {
-                selector.value = filteredZones[0];
-                updateTime();
-            }
-        }
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+}
 
-        function calculateCompounding() {
-            const initialBalance = parseFloat(document.getElementById('initialBalance').value);
-            const frequency = document.getElementById('compoundFrequency').value;
-            const periods = parseFloat(document.getElementById('period').value);
+function redirectToWhatsApp() {
+    window.open('https://wa.me/254111918657?text=Hello Antony I saw you trading Application 😎', '_blank'); // Replace with your WhatsApp number
+}
 
-            if (isNaN(initialBalance) || isNaN(periods) || initialBalance <= 0 || periods <= 0) {
-                alert('Please enter valid values for initial balance and period.');
-                return;
-            }
-
-            let days;
-            switch (frequency) {
-                case 'daily':
-                    days = periods;
-                    break;
-                case 'monthly':
-                    days = periods * 30;
-                    break;
-                case 'yearly':
-                    days = periods * 365;
-                    break;
-                default:
-                    days = 0;
-            }
-
-            const projectedBalance = initialBalance * Math.pow(1.02, days);
-            const totalGrowth = projectedBalance - initialBalance;
-
-            document.getElementById('projectedBalance').textContent = `$${projectedBalance.toFixed(2)}`;
-            document.getElementById('totalGrowth').textContent = `$${totalGrowth.toFixed(2)}`;
-        }
-
-        function startClock() {
-            setInterval(updateTime, 1000);
-        }
-
-        function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode');
-        }
-
-        function redirectToWhatsApp() {
-            window.open('https://wa.me/254111918657?text=Hello Antony I saw you trading Application 😎', '_ blank'); // Replace with your WhatsApp number
-        }
-
-        // Initialize time zones when page loads
-        window.onload = function() {
-            initTimeZones();
-            updateTime();
-            checkDateReset();
-            updateDisplay();
-        };
-    </script>
+// Initialize time zones when page loads
+window.onload = function() {
+    initTimeZones();
+    updateTime();
+    checkDateReset();
+    updateDisplay();
+};
+</script>
 </body>
 </html>
