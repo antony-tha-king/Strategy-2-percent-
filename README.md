@@ -52,3 +52,5 @@
 4)**Calculate Compounding**: Use the compounding calculator to estimate future balances.
 
 5)**Withdraw Profits**: At the end of the month, the application will remind you to withdraw your profits.
+
+### Happy Trading🚀🚀🚀
